@@ -1,0 +1,55 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 1fr 9fr;
+}
+
+.sidebar {
+    background-color: azure;
+    font-size: 25px;
+    font-weight: bold;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    gap: 30px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul > li {
+    margin: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.addproject {
+    font-size: 30px;
+    height: 50px;
+    width: 50px;
+}
+
+.delproject {
+    height: 15px;
+    width: 15px;
+    font-size: 10px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    gap: 30px;
+    justify-content: center;
+}
