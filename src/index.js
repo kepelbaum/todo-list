@@ -1,6 +1,10 @@
 import {createList} from './arrays.js';
 import './styles.css';
 
+function populateStorage() {
+    localStorage.setItem("memory", JSON.stringify(main.list()));
+  }
+
 function display(obj) {
     let side = document.querySelector('.sidebar');
     let add = document.createElement('button');
@@ -26,12 +30,14 @@ function display(obj) {
         del.addEventListener('click', () => {
             main.deleteProject(element.pid);
             ul.removeChild(li);
+            populateStorage();
             displayTasks(0, obj);
         });
         ren.addEventListener('click', () => {
             let x = prompt('Enter new project name', element.name);
             main.renameProject(element.pid, x);
             display(main.list());
+            populateStorage();
         });
         p.addEventListener('click', () => {
             displayTasks(element.pid, obj);
@@ -40,7 +46,8 @@ function display(obj) {
     add.addEventListener('click', () => {
         let x = prompt('Enter new project name');
         main.createProject(x);
-        display(main.list());
+        populateStorage();
+        display(main.list());   
     });
     side.appendChild(ul);
 }
@@ -68,6 +75,12 @@ function displayTasks(pid, obj) {
         if (element.pid == pid) {
             element.content.forEach((ele) => {
                 let li = document.createElement('li');
+                let check = document.createElement('input');
+                check.setAttribute('type', 'checkbox');
+                if (ele.completion == 'yes') {
+                    check.setAttribute('checked', 'true');
+                };
+                
                 li.textContent = `${ele.title} - due date: ${ele.dueDate}`;
                 if (ele.priority == 'high') {
                     li.setAttribute('style', 'color: red;');
@@ -81,9 +94,22 @@ function displayTasks(pid, obj) {
                 let ren = document.createElement('button');
                 ren.textContent = 'Change';
                 ren.classList.add('renbutton');
+                li.appendChild(check);
                 li.appendChild(ren);
                 li.appendChild(del);
                 ul.appendChild(li);
+                check.addEventListener('click', () => {
+                    if (check.getAttribute('checked') == 'true') {
+                        check.setAttribute('checked', 'false');
+                        main.setComplete(element.pid, ele.id);
+                        populateStorage();
+                    }
+                    else {
+                        check.setAttribute('checked', 'true');
+                        main.setComplete(element.pid, ele.id);
+                        populateStorage();
+                    }
+                })
                 del.addEventListener('click', () => {
                     if (toggle == 0) {
                         main.deleteTask(element.pid, ele.id);
@@ -103,6 +129,7 @@ function displayTasks(pid, obj) {
         }
     });
     cont.appendChild(ul);
+    populateStorage();
     add.addEventListener('click', () => {    
         form.setAttribute("style", "opacity: 1");
         toggle = 1;
@@ -138,7 +165,45 @@ function displayTasks(pid, obj) {
 
 }
 
+// function storageAvailable(type) {
+//     let storage;
+//     try {
+//       storage = window[type];
+//       const x = "__storage_test__";
+//       storage.setItem(x, x);
+//       storage.removeItem(x);
+//       return true;
+//     } catch (e) {
+//       return (
+//         e instanceof DOMException &&
+//         // everything except Firefox
+//         (e.code === 22 ||
+//           // Firefox
+//           e.code === 1014 ||
+//           // test name field too, because code might not be present
+//           // everything except Firefox
+//           e.name === "QuotaExceededError" ||
+//           // Firefox
+//           e.name === "NS_ERROR_DOM_QUOTA_REACHED") &&
+//         // acknowledge QuotaExceededError only if there's something already stored
+//         storage &&
+//         storage.length !== 0
+//       );
+//     }
+//   }
+
 const main = createList();
-main.createProject('Default');
+let temp = JSON.parse(localStorage.getItem("memory"));
+if (temp == '') {
+    main.createProject('Default');
+}
+else {
+    main.setList(temp);
+    main.maxpid();
+    main.maxtid();
+}
+
+console.log(temp);
+
 display(main.list());
 displayTasks(1, main.list());
