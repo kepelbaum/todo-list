@@ -202,8 +202,8 @@ if (temp == '') {
 else {
     main.setList(temp);
     console.log(main.list());
-    main.maxpid();
-    main.maxtid();
+    // main.maxpid();
+    // main.maxtid();
 }
 
 display(main.list());
