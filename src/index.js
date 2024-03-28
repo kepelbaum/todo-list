@@ -193,17 +193,15 @@ function displayTasks(pid, obj) {
 //   }
 
 const main = createList();
-console.log(main.list());
 let temp = JSON.parse(localStorage.getItem("memory"));
-console.log(temp);
-if (temp == '') {
+if (temp == '' || temp == null) {
     main.createProject('Default');
 }
 else {
     main.setList(temp);
     console.log(main.list());
-    // main.maxpid();
-    // main.maxtid();
+    main.maxpid();
+    main.maxtid();
 }
 
 display(main.list());
