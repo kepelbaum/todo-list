@@ -203,7 +203,5 @@ else {
     main.maxtid();
 }
 
-console.log(temp);
-
 display(main.list());
 displayTasks(1, main.list());
