@@ -26,6 +26,7 @@ function display(obj) {
         del.addEventListener('click', () => {
             main.deleteProject(element.pid);
             ul.removeChild(li);
+            displayTasks(0, obj);
         });
         ren.addEventListener('click', () => {
             let x = prompt('Enter new project name', element.name);
@@ -45,7 +46,18 @@ function display(obj) {
 }
 
 function displayTasks(pid, obj) {
-    let cont = document.querySelector('.content');
+    let toggle = 0;
+    let current = 0;
+    let form = document.querySelector('.form');
+    let hide = document.querySelector('.hide');
+    let submit = document.querySelector('.submit');
+    let title = document.querySelector('#title');
+    let desc = document.querySelector('#description');
+    let date = document.querySelector('#datetime');
+    let prio = document.querySelector('#priority');
+
+    function refresh() {
+        let cont = document.querySelector('.content');
     cont.textContent = '';
     let add = document.createElement('button');
     add.classList.add('addbutton');
@@ -57,6 +69,12 @@ function displayTasks(pid, obj) {
             element.content.forEach((ele) => {
                 let li = document.createElement('li');
                 li.textContent = `${ele.title} - due date: ${ele.dueDate}`;
+                if (ele.priority == 'high') {
+                    li.setAttribute('style', 'color: red;');
+                }
+                else if (ele.priority == 'low') {
+                    li.setAttribute('style', 'color: green;');
+                }
                 let del = document.createElement('button');
                 del.textContent = 'X';
                 del.classList.add('delbutton');
@@ -67,32 +85,60 @@ function displayTasks(pid, obj) {
                 li.appendChild(del);
                 ul.appendChild(li);
                 del.addEventListener('click', () => {
-                    main.deleteTask(element.pid, ele.id);
-                    ul.removeChild(li);
+                    if (toggle == 0) {
+                        main.deleteTask(element.pid, ele.id);
+                        ul.removeChild(li);
+                    }
                 })
+                ren.addEventListener('click', () => {
+                    current = ele.id;
+                    title.value = ele.title;
+                    desc.value = ele.description;
+                    date.value = ele.dueDate;
+                    prio.value = ele.priority;
+                    toggle = 2;
+                    form.setAttribute("style", "opacity: 1");
+                });
             });
         }
     });
     cont.appendChild(ul);
-    add.addEventListener('click', {
-
+    add.addEventListener('click', () => {    
+        form.setAttribute("style", "opacity: 1");
+        toggle = 1;
     });
+    }
+
+    refresh();
+
+    function clear() {
+        title.value = '';
+        desc.value = '';
+        date.value = '';
+        prio.value = 'medium';
+        form.setAttribute("style", "opacity: 0");
+        toggle = 0;
+    }
+
+    hide.addEventListener('click', () => {
+        clear();
+    });
+    submit.addEventListener('click', () => {
+        if (title.value != '' && toggle == 1) {
+            main.createTask(pid, title.value, desc.value, date.value, prio.value);
+            clear();
+            refresh();
+        }
+        else if (title.value != '' && toggle == 2) {
+            main.changeTask(pid, current, title.value, desc.value, date.value, prio.value);
+            clear();
+            refresh();
+        }
+    });
+
 }
 
 const main = createList();
-main.createProject('test');
-main.createProject('AYAYA');
-console.log(main.list());
-main.createTask(1, 'WOLOLO', 'hehehe', 2025, 'ASAP');
-console.log(main.list());
-main.renameProject(2, 'PYSCH');
-console.log(main.list());
-main.changeTask(1, 1, 'BOOHOO', 'WOOOOOOOOO', 2099, 'high');
-main.createTask(1, 'WOLOLO', 'hehehe', 2025, 'ASAP');
-console.log(main.list());
-// main.deleteTask(1, 1);
-// console.log(main.list());
-// main.deleteProject(2);
-// console.log(main.list());
+main.createProject('Default');
 display(main.list());
 displayTasks(1, main.list());

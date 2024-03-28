@@ -8,6 +8,19 @@
 <body>
     <div class="sidebar"></div>
     <div class="content"></div>
+    <div class="form">
+        <div><h3>Add New Task</h3></div>
+        <div><label for='title'>Title</label><input id='title' name='title'></div>
+        <div><label for='description'>Description</label><input type='text' id='description' name='description'></div>
+        <div><label for='datetime'>Deadline</label><input type='date' id='datetime' name='datetime'></div>
+        <div><label for='priority'>Priority</label><select id='priority' name='priority'>
+            <option value="high">High</option>
+            <option value="medium" selected="selected">Medium</option>
+            <option value="low">Low</option>
+        </select></div>
+    <div><button class="submit">Submit</button>
+    <button class="hide">Cancel</button></div>
+</div>
     <script src="main.js"></script>
 </body>
 </html>
