@@ -4,22 +4,28 @@ export function createList() {
     let taskid = 1;
     const maxpid = () => {
         let a = 0;
+        if (masterList.length > 0) {
         masterList.forEach((element) => {
             if (element.pid > a) {
                 a = element.pid;
             }
         });
+        }
         projid = a + 1;
     }
     const maxtid = () => {
         let a = 0;
+        if (masterList.length > 0) {
         masterList.forEach((element) => {
+            if (element.content.length > 0) {
             element.content.forEach((ele) => {
                 if (ele.id > a) {
                     a = ele.id;
                 }
             });
+            }
         });
+        }
         taskid = a + 1;
     }
     const list = () => masterList;
